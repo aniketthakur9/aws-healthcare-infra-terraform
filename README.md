@@ -51,7 +51,12 @@ aws-healthcare-infra-terraform/
 ├── README.md
 ├── website/
 ├── bootstrap/
-└── admin-dashboard/
+├── admin-dashboard/
+└── images/
+    ├── home.png
+    ├── doctors.png
+    ├── nurses.png
+    └── patients.png
 ```
 
 ## Features
