@@ -3,6 +3,24 @@
 ## Overview
 This project automates the deployment of a healthcare application's cloud infrastructure on AWS using Terraform (Infrastructure as Code). It provisions a secure, monitored environment with centralized logging and alerting.
 
+## Project Screenshots
+
+### Home Page
+
+![home](images/home.png.png)
+
+### Doctors Page
+
+![doctors](images/doctors.png.png)
+
+### Nurses Page
+
+![nurses](images/nurses.png.png)
+
+### Patients Page
+
+![patients](images/patients.png.png)
+
 ## Architecture
 - **VPC** – Isolated network environment for the application
 - **EC2** – Compute instances hosting the application
