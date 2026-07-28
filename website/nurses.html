@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nurses - SecureHealth</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',sans-serif; background:#0f172a; color:#e2e8f0; }
+    nav { background:#1e293b; padding:16px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; }
+    nav h2 { color:#38bdf8; }
+    nav a { color:#94a3b8; text-decoration:none; margin-left:24px; }
+    nav a:hover { color:#38bdf8; }
+    .page-title { text-align:center; padding:50px 20px 30px; }
+    .page-title h1 { color:#38bdf8; font-size:2.2rem; }
+    .page-title p { color:#64748b; margin-top:8px; }
+    .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:960px; margin:0 auto 60px; padding:0 40px; }
+    .card { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:24px; }
+    .avatar { width:50px; height:50px; border-radius:50%; background:#7c3aed; display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold; color:white; margin-bottom:14px; }
+    .card h3 { color:#f1f5f9; font-size:1rem; }
+    .dept { color:#a78bfa; font-size:0.82rem; margin:5px 0; }
+    .shift { display:inline-block; padding:3px 10px; border-radius:999px; font-size:0.76rem; margin-top:8px; }
+    .morning { background:#1e3a5f; color:#38bdf8; }
+    .night { background:#1e1b4b; color:#a78bfa; }
+    .info { color:#64748b; font-size:0.82rem; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h2>SecureHealth</h2>
+    <div><a href="index.html">Home</a><a href="doctors.html">Doctors</a><a href="nurses.html">Nurses</a><a href="patients.html">Patients</a></div>
+  </nav>
+  <div class="page-title"><h1>Nurses</h1><p>Nursing staff currently on shift</p></div>
+  <div class="grid">
+    <div class="card"><div class="avatar">NV</div><h3>Neha Verma</h3><div class="dept">ICU Department</div><span class="shift morning">Morning Shift</span><p class="info">5 years exp.</p></div>
+    <div class="card"><div class="avatar">SR</div><h3>Sunita Rao</h3><div class="dept">Emergency</div><span class="shift morning">Morning Shift</span><p class="info">7 years exp.</p></div>
+    <div class="card"><div class="avatar">KN</div><h3>Kavya Nair</h3><div class="dept">Cardiology</div><span class="shift night">Night Shift</span><p class="info">3 years exp.</p></div>
+    <div class="card"><div class="avatar">AS</div><h3>Anjali Singh</h3><div class="dept">Neurology</div><span class="shift night">Night Shift</span><p class="info">6 years exp.</p></div>
+  </div>
+</body>
+</html>

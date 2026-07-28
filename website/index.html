@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Health Monitor</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',sans-serif; background:#0f172a; color:#e2e8f0; }
+    nav { background:#1e293b; padding:16px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; }
+    nav h2 { color:#38bdf8; font-size:1.2rem; }
+    nav a { color:#94a3b8; text-decoration:none; margin-left:24px; }
+    nav a:hover { color:#38bdf8; }
+    .hero { text-align:center; padding:80px 40px 40px; }
+    .dot { width:14px; height:14px; background:#22c55e; border-radius:50%; display:inline-block; margin-right:8px; }
+    h1 { font-size:2.8rem; color:#38bdf8; margin:16px 0 10px; }
+    .sub { color:#94a3b8; font-size:1.1rem; }
+    .badges { margin:30px 0; }
+    .badge { background:#1e293b; border:1px solid #334155; padding:8px 18px; border-radius:999px; margin:0 6px; font-size:0.85rem; color:#38bdf8; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:900px; margin:40px auto; padding:0 40px; }
+    .card { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:24px; text-align:center; }
+    .card h3 { color:#38bdf8; margin-bottom:8px; }
+    .card p { color:#64748b; font-size:0.9rem; margin-top:6px; }
+    .green { color:#22c55e; font-weight:600; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:900px; margin:0 auto 60px; padding:0 40px; }
+    .stat { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:20px; text-align:center; }
+    .stat h2 { color:#38bdf8; font-size:2rem; }
+    .stat p { color:#64748b; font-size:0.85rem; margin-top:4px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h2>SecureHealth</h2>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="doctors.html">Doctors</a>
+      <a href="nurses.html">Nurses</a>
+      <a href="patients.html">Patients</a>
+    </div>
+  </nav>
+  <div class="hero">
+    <div><span class="dot"></span><span class="green">All Systems Operational</span></div>
+    <h1>Secure Health Monitor</h1>
+    <p class="sub">AWS Infrastructure - Protected and Monitored 24/7</p>
+    <div class="badges">
+      <span class="badge">CloudTrail Active</span>
+      <span class="badge">AES256 Encrypted</span>
+      <span class="badge">CloudWatch Alerts ON</span>
+      <span class="badge">IAM Least Privilege</span>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>CloudTrail</h3><p class="green">Logging Active</p><p>Every API call recorded</p></div>
+    <div class="card"><h3>Encryption</h3><p class="green">AES256 Enabled</p><p>All logs encrypted in S3</p></div>
+    <div class="card"><h3>Alerts</h3><p class="green">CloudWatch ON</p><p>Real time threat detection</p></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><h2>3</h2><p>Doctors On Duty</p></div>
+    <div class="stat"><h2>4</h2><p>Nurses On Shift</p></div>
+    <div class="stat"><h2>6</h2><p>Active Patients</p></div>
+    <div class="stat"><h2>24/7</h2><p>Monitoring Active</p></div>
+  </div>
+</body>
+</html>

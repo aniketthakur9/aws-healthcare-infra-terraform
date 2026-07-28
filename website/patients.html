@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patients - SecureHealth</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',sans-serif; background:#0f172a; color:#e2e8f0; }
+    nav { background:#1e293b; padding:16px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; }
+    nav h2 { color:#38bdf8; }
+    nav a { color:#94a3b8; text-decoration:none; margin-left:24px; }
+    nav a:hover { color:#38bdf8; }
+
+    .page-title { text-align:center; padding:50px 20px 20px; }
+    .page-title h1 { color:#38bdf8; font-size:2.2rem; }
+    .page-title p  { color:#64748b; margin-top:8px; }
+
+    .toolbar { max-width:1100px; margin:20px auto; padding:0 40px; display:flex; justify-content:space-between; align-items:center; }
+    .btn-add { background:#0ea5e9; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:0.9rem; cursor:pointer; }
+    .btn-add:hover { background:#0284c7; }
+    .encrypt-badge { background:#14532d; color:#22c55e; border:1px solid #166534; padding:6px 14px; border-radius:999px; font-size:0.8rem; }
+
+    .table-wrap { max-width:1100px; margin:0 auto 60px; padding:0 40px; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; }
+    th { background:#1e293b; color:#38bdf8; padding:14px 16px; text-align:left; font-size:0.82rem; border-bottom:1px solid #334155; white-space:nowrap; }
+    td { padding:14px 16px; border-bottom:1px solid #1e293b; font-size:0.88rem; color:#cbd5e1; }
+    tr:hover td { background:#1e293b; }
+
+    .badge { padding:3px 10px; border-radius:999px; font-size:0.78rem; }
+    .b-stable     { background:#14532d; color:#22c55e; }
+    .b-critical   { background:#7f1d1d; color:#f87171; }
+    .b-recovering { background:#713f12; color:#fbbf24; }
+
+    .btn-del { background:transparent; border:1px solid #7f1d1d; color:#f87171; padding:3px 10px; border-radius:6px; font-size:0.78rem; cursor:pointer; }
+    .btn-del:hover { background:#7f1d1d; color:#fff; }
+
+    /* ── Add Patient Modal ── */
+    .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:100; align-items:center; justify-content:center; }
+    .modal-bg.open { display:flex; }
+    .modal { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:32px; width:100%; max-width:640px; max-height:90vh; overflow-y:auto; }
+    .modal h2 { color:#38bdf8; margin-bottom:4px; }
+    .modal .sub { color:#64748b; font-size:0.85rem; margin-bottom:24px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-grid .full { grid-column:1/-1; }
+    label { display:block; color:#94a3b8; font-size:0.8rem; margin-bottom:4px; }
+    input, select, textarea { width:100%; background:#0f172a; border:1px solid #334155; border-radius:6px; padding:8px 12px; color:#e2e8f0; font-size:0.88rem; font-family:inherit; }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:#38bdf8; }
+    textarea { resize:vertical; }
+    .modal-actions { display:flex; gap:12px; margin-top:24px; }
+    .btn-save   { background:#0ea5e9; color:#fff; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-size:0.9rem; }
+    .btn-save:hover { background:#0284c7; }
+    .btn-cancel { background:#334155; color:#94a3b8; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:0.9rem; }
+
+    /* ── Delete Confirm Modal ── */
+    .del-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:110; align-items:center; justify-content:center; }
+    .del-modal-bg.open { display:flex; }
+    .del-modal { background:#1e293b; border:1px solid #7f1d1d; border-radius:14px; padding:28px; width:100%; max-width:480px; }
+    .del-modal h2 { color:#f87171; margin-bottom:16px; font-size:1.2rem; }
+    .del-info { background:#0f172a; border:1px solid #334155; border-radius:8px; padding:14px; margin-bottom:14px; font-size:0.88rem; line-height:1.8; }
+    .del-info span { color:#64748b; }
+    .del-info strong { color:#e2e8f0; }
+    .warn-box { background:#450a0a; border:1px solid #7f1d1d; border-radius:8px; padding:10px 14px; color:#fca5a5; font-size:0.82rem; margin-bottom:14px; }
+    .del-actions { display:flex; gap:12px; margin-top:20px; }
+    .btn-confirm-del { background:#dc2626; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:0.9rem; }
+    .btn-confirm-del:hover { background:#b91c1c; }
+
+    /* ── Toast ── */
+    .toast { display:none; position:fixed; bottom:24px; right:24px; padding:12px 20px; border-radius:10px; font-size:0.9rem; z-index:200; max-width:360px; }
+    .toast.show       { display:block; }
+    .toast.success    { background:#14532d; color:#22c55e; border:1px solid #166534; }
+    .toast.error      { background:#7f1d1d; color:#f87171; border:1px solid #991b1b; }
+    .toast.info       { background:#1e3a5f; color:#38bdf8; border:1px solid #1d4ed8; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h2>SecureHealth</h2>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="doctors.html">Doctors</a>
+      <a href="nurses.html">Nurses</a>
+      <a href="patients.html">Patients</a>
+    </div>
+  </nav>
+
+  <div class="page-title">
+    <h1>Patients</h1>
+    <p>Current admitted patients — records stored in AWS DynamoDB (KMS encrypted)</p>
+  </div>
+
+  <div class="toolbar">
+    <span class="encrypt-badge">🔒 KMS Encrypted &nbsp;|&nbsp; CloudTrail Logged</span>
+    <button class="btn-add" onclick="openAddModal()">+ Add Patient</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Age</th><th>Blood Group</th>
+          <th>Diagnosis</th><th>Doctor</th><th>Phone</th><th>Admitted</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="patientBody">
+        <!-- static demo rows shown until Flask responds -->
+        <tr><td>#P001</td><td>Ramesh Kumar</td><td>54</td><td>B+</td><td>Cardiac Arrest</td><td>Dr. Arjun Mehta</td><td>9876543210</td><td>2025-05-01 08:30</td><td><span class="badge b-critical">Critical</span></td><td>—</td></tr>
+        <tr><td>#P002</td><td>Meena Joshi</td><td>38</td><td>A+</td><td>Migraine</td><td>Dr. Priya Sharma</td><td>9823456780</td><td>2025-05-02 10:15</td><td><span class="badge b-stable">Stable</span></td><td>—</td></tr>
+        <tr><td>#P003</td><td>Suresh Patil</td><td>67</td><td>O-</td><td>Hip Fracture</td><td>Dr. Rohan Patel</td><td>9012345678</td><td>2025-05-02 14:00</td><td><span class="badge b-recovering">Recovering</span></td><td>—</td></tr>
+        <tr><td>#P004</td><td>Anita Desai</td><td>45</td><td>AB+</td><td>Hypertension</td><td>Dr. Arjun Mehta</td><td>9934567812</td><td>2025-05-03 09:45</td><td><span class="badge b-stable">Stable</span></td><td>—</td></tr>
+        <tr><td>#P005</td><td>Vikram Shah</td><td>29</td><td>A-</td><td>Appendicitis</td><td>Dr. Rohan Patel</td><td>9756123490</td><td>2025-05-03 11:20</td><td><span class="badge b-recovering">Recovering</span></td><td>—</td></tr>
+        <tr><td>#P006</td><td>Pooja Iyer</td><td>52</td><td>B-</td><td>Epilepsy</td><td>Dr. Priya Sharma</td><td>9611234560</td><td>2025-05-03 13:05</td><td><span class="badge b-stable">Stable</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Add Patient Modal ── -->
+  <div class="modal-bg" id="addModalBg">
+    <div class="modal">
+      <h2>➕ Add New Patient</h2>
+      <p class="sub">Record saved to encrypted DynamoDB + S3 audit backup</p>
+      <div class="form-grid">
+        <div class="full">
+          <label>Full Name *</label>
+          <input type="text" id="f_name" placeholder="e.g. Rajesh Verma">
+        </div>
+        <div>
+          <label>Age *</label>
+          <input type="number" id="f_age" placeholder="e.g. 45" min="0" max="150">
+        </div>
+        <div>
+          <label>Gender</label>
+          <select id="f_gender"><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div>
+          <label>Blood Group</label>
+          <select id="f_blood">
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+        </div>
+        <div>
+          <label>Phone</label>
+          <input type="text" id="f_phone" placeholder="10-digit number">
+        </div>
+        <div>
+          <label>Diagnosis *</label>
+          <input type="text" id="f_diagnosis" placeholder="e.g. Hypertension">
+        </div>
+        <div>
+          <label>Assigned Doctor</label>
+          <input type="text" id="f_doctor" placeholder="e.g. Dr. Priya Sharma">
+        </div>
+        <div>
+          <label>Symptoms</label>
+          <textarea id="f_symptoms" rows="2" placeholder="e.g. Chest pain, fatigue"></textarea>
+        </div>
+        <div>
+          <label>Medication</label>
+          <textarea id="f_medication" rows="2" placeholder="e.g. Aspirin 75mg"></textarea>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="f_status"><option>Stable</option><option>Recovering</option><option>Critical</option></select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-save" onclick="savePatient()">💾 Save Patient Record</button>
+        <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Delete Confirm Modal ── -->
+  <div class="del-modal-bg" id="delModalBg">
+    <div class="del-modal">
+      <h2>🗑 Delete Patient Record</h2>
+      <div class="del-info">
+        <div><span>Patient ID &nbsp;&nbsp;</span><strong id="del_id">—</strong></div>
+        <div><span>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong id="del_name">—</strong></div>
+        <div><span>Diagnosis &nbsp;&nbsp;</span><strong id="del_diag">—</strong></div>
+      </div>
+      <div class="warn-box">
+        ⚠️ Record will be permanently removed from DynamoDB.
+        A full copy is archived in S3 under <code>deletions/</code> for HIPAA compliance.
+      </div>
+      <label>Reason for deletion (required)</label>
+      <input type="text" id="del_reason" placeholder="e.g. Patient discharged, duplicate entry…" style="margin-top:6px;">
+      <div id="del_error" style="color:#f87171;font-size:0.82rem;margin-top:6px;display:none">Please enter a reason.</div>
+      <div class="del-actions">
+        <button class="btn-confirm-del" onclick="confirmDelete()">🗑 Confirm Delete</button>
+        <button class="btn-cancel" onclick="closeDelModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ADMIN_API is injected by Terraform at deploy time — points to this EC2's IP:5000
+    // Falls back to localhost:5000 if opened directly during local dev
+    const ADMIN_API = ('${admin_api_url}' === '$${admin_api_url}' ? 'http://localhost:5000' : '${admin_api_url}').replace(/\/$/, '');
+
+    let _pendingDelete = null;
+
+    // ── Toast ──────────────────────────────────────────────────────────────────
+    function showToast(msg, type='success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + type;
+      setTimeout(() => { t.className = 'toast'; }, 4000);
+    }
+
+    // ── Badge helper ───────────────────────────────────────────────────────────
+    function badge(status) {
+      const map = { Stable:'b-stable', Recovering:'b-recovering', Critical:'b-critical' };
+      return `<span class="badge ${map[status]||'b-stable'}">${status}</span>`;
+    }
+
+    // ── Load patients from Flask/DynamoDB ──────────────────────────────────────
+    async function loadPatients() {
+      try {
+        const res = await fetch(`${ADMIN_API}/api/patients`, { signal: AbortSignal.timeout(3000) });
+        if (!res.ok) return;
+        const patients = await res.json();
+        if (!patients.length) return;
+        document.getElementById('patientBody').innerHTML = patients.map(p => `
+          <tr>
+            <td><code>${p.patient_id}</code></td>
+            <td>${p.name}</td>
+            <td>${p.age}</td>
+            <td>${p.blood_group || '—'}</td>
+            <td>${p.diagnosis}</td>
+            <td>${p.doctor || '—'}</td>
+            <td>${p.phone || '—'}</td>
+            <td>${p.admitted_on}</td>
+            <td>${badge(p.status || 'Stable')}</td>
+            <td><button class="btn-del" onclick="openDelModal('${p.patient_id}','${p.name}','${p.diagnosis}')">🗑 Delete</button></td>
+          </tr>`).join('');
+      } catch (e) {
+        // Flask not reachable — static demo rows stay, that's fine
+      }
+    }
+
+    // ── Add Modal ─────────────────────────────────────────────────────────────
+    function openAddModal()  { document.getElementById('addModalBg').classList.add('open'); }
+    function closeAddModal() { document.getElementById('addModalBg').classList.remove('open'); }
+
+    document.getElementById('addModalBg').addEventListener('click', e => {
+      if (e.target === document.getElementById('addModalBg')) closeAddModal();
+    });
+
+    async function savePatient() {
+      const name      = document.getElementById('f_name').value.trim();
+      const age       = document.getElementById('f_age').value.trim();
+      const diagnosis = document.getElementById('f_diagnosis').value.trim();
+      if (!name || !age || !diagnosis) {
+        showToast('Name, Age and Diagnosis are required', 'error'); return;
+      }
+      const payload = {
+        name, age, diagnosis,
+        gender:      document.getElementById('f_gender').value,
+        blood_group: document.getElementById('f_blood').value,
+        phone:       document.getElementById('f_phone').value,
+        doctor:      document.getElementById('f_doctor').value,
+        symptoms:    document.getElementById('f_symptoms').value,
+        medication:  document.getElementById('f_medication').value,
+        status:      document.getElementById('f_status').value,
+      };
+      try {
+        showToast('Saving…', 'info');
+        const res = await fetch(`${ADMIN_API}/api/add_patient`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          closeAddModal();
+          ['f_name','f_age','f_phone','f_diagnosis','f_doctor','f_symptoms','f_medication']
+            .forEach(id => document.getElementById(id).value = '');
+          showToast('✅ Patient saved to DynamoDB + S3 audit log' +
+            (payload.status === 'Critical' ? ' — 🚨 Email alert sent!' : ''), 'success');
+          await loadPatients();
+        } else {
+          showToast('❌ Save failed — check Flask logs', 'error');
+        }
+      } catch (e) {
+        showToast('❌ Cannot reach backend: ' + ADMIN_API, 'error');
+      }
+    }
+
+    // ── Delete Modal ──────────────────────────────────────────────────────────
+    function openDelModal(id, name, diagnosis) {
+      _pendingDelete = { id, name, diagnosis };
+      document.getElementById('del_id').textContent   = id;
+      document.getElementById('del_name').textContent = name;
+      document.getElementById('del_diag').textContent = diagnosis;
+      document.getElementById('del_reason').value     = '';
+      document.getElementById('del_error').style.display = 'none';
+      document.getElementById('delModalBg').classList.add('open');
+    }
+    function closeDelModal() { document.getElementById('delModalBg').classList.remove('open'); }
+
+    async function confirmDelete() {
+      const reason = document.getElementById('del_reason').value.trim();
+      if (!reason) { document.getElementById('del_error').style.display = 'block'; return; }
+      document.getElementById('del_error').style.display = 'none';
+      try {
+        const res = await fetch(`${ADMIN_API}/api/delete_patient`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ patient_id: _pendingDelete.id, reason })
+        });
+        if (res.ok) {
+          closeDelModal();
+          showToast(`✅ ${_pendingDelete.name} deleted — audit log saved to S3`, 'success');
+          await loadPatients();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast('❌ Delete failed: ' + (err.error || 'unknown error'), 'error');
+        }
+      } catch (e) {
+        showToast('❌ Cannot reach backend: ' + ADMIN_API, 'error');
+      }
+    }
+
+    loadPatients();
+  </script>
+</body>
+</html>
