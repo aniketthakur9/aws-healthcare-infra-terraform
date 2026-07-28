@@ -16,6 +16,26 @@ This project automates the deployment of a healthcare application's cloud infras
 - **AWS** (EC2, VPC, IAM, CloudWatch, CloudTrail, SNS)
 - **Bash** – Instance provisioning scripts
 
+
+## Project Structure
+
+```text
+aws-healthcare-infra-terraform/
+├── main.tf
+├── vpc.tf
+├── ec2.tf
+├── iam.tf
+├── cloudwatch.tf
+├── cloudtrail.tf
+├── variables.tf
+├── outputs.tf
+├── userdata.sh
+├── README.md
+├── website/
+├── bootstrap/
+└── admin-dashboard/
+```
+
 ## Features
 - Automated, repeatable infrastructure provisioning
 - Centralized monitoring and logging
